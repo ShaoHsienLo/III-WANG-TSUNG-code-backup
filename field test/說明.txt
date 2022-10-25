@@ -1,0 +1,2 @@
+database pwd:123456
+grafana acc/pwd: admin/adminadmin
