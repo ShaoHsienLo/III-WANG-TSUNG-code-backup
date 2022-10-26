@@ -1,3 +1,5 @@
+import json
+
 import pandas as pd
 import numpy as np
 from statistics import mode
@@ -16,9 +18,9 @@ def _sem(x):
     return sem(x.values)
 
 
-df = pd.read_csv('./unlabeled-data/format-data(per second)/Sep-8-data.csv')
+df = pd.read_csv('./unlabeled-data/format-data(per second)/Oct-5-data.csv')
 # df['Timestamp'] = pd.to_datetime(df['Timestamp'], format="%Y-%m-%d %H:%M:%S")
-which_doing = 1
+which_doing = 3
 # label_date = ['2022-09-05 10:31:00', '2022-09-08 09:28:00', '2022-09-22 08:52:00', '2022-10-05 09:16:00',
 #               '2022-10-07 11:04:00']
 # start_index = df[df['Timestamp'] >= label_date[which_doing]].index[0]
@@ -194,11 +196,6 @@ peaks = peaks[:ingot_quantity]
 print('peaks: ', peaks)
 print('peaks length: ', len(peaks))
 
-ppp = peaks[-9:]
-print(ppp)
-print(len(ppp))
-exit(0)
-
 """
 rules:
 lst[1] - lst[0] > 20
@@ -248,13 +245,13 @@ for i, lst in enumerate(peaks):
         next_oil_pressure_start_index = oil_pressure_end_index
 
     # Get ingot data
-    ingot_data = df['ingot'].iloc[ingot_start_index:ingot_end_index]
+    ingot_data = df['ingot'].iloc[ingot_start_index:ingot_end_index].tolist()
     # Get oil pressure, mould and bucket data
-    oil_pressure_data = df['oil_pressure'].iloc[oil_pressure_start_index:oil_pressure_end_index]
-    mould_data = df['mould'].iloc[oil_pressure_start_index:oil_pressure_end_index]
-    bucket_data = df['bucket'].iloc[oil_pressure_start_index:oil_pressure_end_index]
+    oil_pressure_data = df['oil_pressure'].iloc[oil_pressure_start_index:oil_pressure_end_index].tolist()
+    mould_data = df['mould'].iloc[oil_pressure_start_index:oil_pressure_end_index].tolist()
+    bucket_data = df['bucket'].iloc[oil_pressure_start_index:oil_pressure_end_index].tolist()
     # Get discharge data
-    discharge_data = df['discharge'].iloc[oil_pressure_start_index:oil_pressure_end_index]
+    discharge_data = df['discharge'].iloc[oil_pressure_start_index:oil_pressure_end_index].tolist()
     # Merge all data
     data = {
         "ingot": ingot_data,
@@ -264,6 +261,11 @@ for i, lst in enumerate(peaks):
         "discharge": discharge_data
     }
 
+    with open("./model-data/input-data/1005_input_data.json", "a") as wf:
+        json.dump(data, wf)
+        wf.write("\n")
+    continue
+
     # Time domain analysis
     for k, v in data.items():
         data_ = data_ + list(v.agg(agg_functions))
@@ -272,6 +274,8 @@ for i, lst in enumerate(peaks):
 
     data_list.append(data_)
     data_ = []
+
+exit(0)
 
 data_list = pd.DataFrame(data_list)
 print(data_list)

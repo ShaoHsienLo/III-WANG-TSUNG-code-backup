@@ -1,3 +1,5 @@
+import json
+
 import pandas as pd
 import numpy as np
 from statistics import mode
@@ -24,16 +26,6 @@ start_index = df[df['Timestamp'] >= '2022-07-04 09:48:00'].index[0]
 print("start_index: ", start_index)
 df = df[start_index:]
 ingot_quantity = 31
-# quality_results = [
-#     ["XAA"], ["AAA"], ["AAA"], ["AAA"], ["AAA"], ["ABB"],
-#     ["BBB"], ["BBB"], ["BBB"], ["BBB"], ["BBB"], ["BBB"], ["BBB"], ["BBB"],
-#     ["BBB"], ["BBB"], ["BBB"], ["BBB"], ["BBB"], ["BBB"], ["BBB"], ["BBB"],
-#     ["BBB"], ["BBB"], ["BBB"], ["BBB"], ["BBB"], ["BBB"], ["BBB"], ["BBB"],
-#     ["BBX"]
-# ]
-# label_mapping = {
-#     "XAA": "A", "AAA": "A", "ABB": "B", "BBB": "B", "BBX": "B"
-# }
 quality_results = [
     ['XA'], ['AA'], ['AA'], ['AA'], ['AA'], ['AA'], ['AA'], ['AA'], ['AA'], ['AB'],
     ['BB'], ['BB'], ['BB'], ['BB'], ['BB'], ['BB'], ['BB'], ['BB'], ['BB'], ['BB'],
@@ -46,6 +38,16 @@ label_mapping = {
     "AA": "A", "AB": "A", "AC": "A",
     "BB": "B", "BC": "B", "CC": "C"
 }
+# quality_results = [
+#     ["XAA"], ["AAA"], ["AAA"], ["AAA"], ["AAA"], ["ABB"],
+#     ["BBB"], ["BBB"], ["BBB"], ["BBB"], ["BBB"], ["BBB"], ["BBB"], ["BBB"],
+#     ["BBB"], ["BBB"], ["BBB"], ["BBB"], ["BBB"], ["BBB"], ["BBB"], ["BBB"],
+#     ["BBB"], ["BBB"], ["BBB"], ["BBB"], ["BBB"], ["BBB"], ["BBB"], ["BBB"],
+#     ["BBX"]
+# ]
+# label_mapping = {
+#     "XAA": "A", "AAA": "A", "ABB": "B", "BBB": "B", "BBX": "B"
+# }
 
 # Fegure out ingot ingot_peaks range: method 2
 state = 'not working' if df['ingot'].iloc[0] > 390 else 'working'
@@ -188,21 +190,26 @@ for i, lst in enumerate(peaks):
         next_oil_pressure_start_index = oil_pressure_end_index
 
     # Get ingot data
-    ingot_data = df['ingot'].iloc[ingot_start_index:ingot_end_index]
+    ingot_data = df['ingot'].iloc[ingot_start_index:ingot_end_index].tolist()
     # Get oil pressure, mould and bucket data
-    oil_pressure_data = df['oil_pressure'].iloc[ingot_start_index:ingot_end_index]
-    mould_data = df['mould'].iloc[ingot_start_index:ingot_end_index]
-    bucket_data = df['bucket'].iloc[ingot_start_index:ingot_end_index]
+    oil_pressure_data = df['oil_pressure'].iloc[ingot_start_index:ingot_end_index].tolist()
+    mould_data = df['mould'].iloc[ingot_start_index:ingot_end_index].tolist()
+    bucket_data = df['bucket'].iloc[ingot_start_index:ingot_end_index].tolist()
     # Get discharge data
-    discharge_data = df['discharge'].iloc[ingot_start_index:ingot_end_index]
+    discharge_data = df['discharge'].iloc[ingot_start_index:ingot_end_index].tolist()
     # Merge all data
     data = {
         "ingot": ingot_data,
         "oil_pressure": oil_pressure_data,
         "mould": mould_data,
         "bucket": bucket_data,
-        "discgage": discharge_data
+        "discharge": discharge_data
     }
+
+    with open("./model-data/input-data/0704_1_input_data.json", "a") as wf:
+        json.dump(data, wf)
+        wf.write("\n")
+    continue
 
     # Time domain analysis
     for k, v in data.items():
@@ -215,4 +222,4 @@ for i, lst in enumerate(peaks):
 data_list = pd.DataFrame(data_list, columns=cols_)
 data_list["final label"] = data_list["original label"].map(label_mapping)
 print(data_list)
-data_list.to_csv("labeled-data/Jul-4-labeled-data_1.csv", index=False)
+# data_list.to_csv("labeled-data/Jul-4-labeled-data_1.csv", index=False)

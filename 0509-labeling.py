@@ -1,3 +1,5 @@
+import json
+
 import pandas as pd
 import numpy as np
 from scipy.signal import find_peaks
@@ -153,21 +155,25 @@ for i, lst in enumerate(peaks):
         next_oil_pressure_start_index = oil_pressure_end_index
 
     # Get ingot data
-    ingot_data = df['ingot'].iloc[ingot_start_index:ingot_end_index]
+    ingot_data = df['ingot'].iloc[ingot_start_index:ingot_end_index].tolist()
     # Get oil pressure, mould and bucket data
-    oil_pressure_data = df['oil_pressure'].iloc[ingot_start_index:ingot_end_index]
-    mould_data = df['mould'].iloc[ingot_start_index:ingot_end_index]
-    bucket_data = df['bucket'].iloc[ingot_start_index:ingot_end_index]
+    oil_pressure_data = df['oil_pressure'].iloc[ingot_start_index:ingot_end_index].tolist()
+    mould_data = df['mould'].iloc[ingot_start_index:ingot_end_index].tolist()
+    bucket_data = df['bucket'].iloc[ingot_start_index:ingot_end_index].tolist()
     # Get discharge data
-    discharge_data = df['discharge'].iloc[ingot_start_index:ingot_end_index]
+    discharge_data = df['discharge'].iloc[ingot_start_index:ingot_end_index].tolist()
     # Merge all data
     data = {
         "ingot": ingot_data,
         "oil_pressure": oil_pressure_data,
         "mould": mould_data,
         "bucket": bucket_data,
-        "discgage": discharge_data
+        "discharge": discharge_data
     }
+    with open("./model-data/input-data/0509_input_data.json", "a") as wf:
+        json.dump(data, wf)
+        wf.write("\n")
+    continue
 
     # Time domain analysis
     for k, v in data.items():
@@ -180,4 +186,4 @@ for i, lst in enumerate(peaks):
 data_list = pd.DataFrame(data_list, columns=cols_)
 data_list["final label"] = data_list["original label"].map(label_mapping)
 print(data_list)
-data_list.to_csv("labeled-data/May-9-labeled-data.csv", index=False)
+# data_list.to_csv("labeled-data/May-9-labeled-data.csv", index=False)
