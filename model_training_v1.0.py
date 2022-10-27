@@ -2,6 +2,7 @@ import random
 import pandas as pd
 import os
 import joblib
+from lightgbm import LGBMClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import MinMaxScaler
@@ -88,9 +89,23 @@ def smoteenn(X_train_pca, y_train):
 
 
 def model_training(X_train_res, y_train_res):
-    rf = RandomForestClassifier(n_estimators=100, random_state=42, max_depth=3)
-    rf.fit(X_train_res, y_train_res)
-    return rf
+    # rf = RandomForestClassifier(bootstrap=True, ccp_alpha=0.0, class_weight=None,
+    #                             criterion='gini', max_depth=None, max_features='auto',
+    #                             max_leaf_nodes=None, max_samples=None,
+    #                             min_impurity_decrease=0.0, min_samples_leaf=1, min_samples_split=2,
+    #                             min_weight_fraction_leaf=0.0, n_estimators=100,
+    #                             n_jobs=-1, oob_score=False, random_state=8543, verbose=0, warm_start=False)
+    # rf.fit(X_train_res, y_train_res)
+
+    # lgbm = LGBMClassifier(boosting_type='gbdt', class_weight=None, colsample_bytree=1.0,
+    #                       importance_type='split', learning_rate=0.1, max_depth=-1,
+    #                       min_child_samples=20, min_child_weight=0.001, min_split_gain=0.0,
+    #                       n_estimators=100, n_jobs=-1, num_leaves=31, objective=None,
+    #                       random_state=5880, reg_alpha=0.0, reg_lambda=0.0, silent='warn',
+    #                       subsample=1.0, subsample_for_bin=200000, subsample_freq=0)
+    lgbm = LGBMClassifier()
+    lgbm.fit(X_train_res, y_train_res)
+    return lgbm
 
 
 def explain_model(rf, X_train, X_test, target_names=None):
@@ -99,7 +114,7 @@ def explain_model(rf, X_train, X_test, target_names=None):
     explainer = LimeTabularExplainer(X_train_.values, feature_names=X_train_.columns, class_names=target_names)
     i = random.randint(0, X_test_.shape[0])
     exp = explainer.explain_instance(X_test_.iloc[i], rf.predict_proba)
-    exp.save_to_file("./model-data/20221021/exp_v1.1.html")
+    exp.save_to_file("./models/20221026/exp-lgbm.html")
 
 
 def show_performances(rf, X_test_norm, y_test, target_names=None):
@@ -123,11 +138,11 @@ def visualization(rf, feature_list):
 
 
 def save_model(rf, model_name="rf.model"):
-    joblib.dump(rf, "model-data/20221021/rf.model")
+    joblib.dump(rf, "models/20221026/{}".format(model_name))
 
 
 def load_model(model_name="rf.model"):
-    model = joblib.load("model-data/20221021/rf.model")
+    model = joblib.load("models/20221026/{}".format(model_name))
     return model
 
 
@@ -155,7 +170,8 @@ df_handle_na = handle_na_values(df)
 df_encoded, target_names = handle_categorical_data(df_handle_na, label="final label")
 
 # 特徵選擇(降維)
-df_selected = select_k_best(df_encoded, k=10, label="final label")
+df_selected = df_encoded
+# df_selected = select_k_best(df_encoded, k=10, label="final label")
 
 # 切分模型輸入資料與預測目標
 X_train, X_test, y_train, y_test = split_data(df_selected, label="final label")
@@ -179,16 +195,17 @@ X_train_res, y_train_res = smoteenn(X_train_norm, y_train)
 # ), index=False)
 
 # 模型訓練
-rf = model_training(X_train_res, y_train_res)
+# rf = model_training(X_train_res, y_train_res)
+lgbm = model_training(X_train_res, y_train_res)
 
 # 解釋模型
-explain_model(rf, X_train, X_test, target_names=target_names)
+explain_model(lgbm, X_train, X_test, target_names=target_names)
 
 # 儲存模型
-save_model(rf)
+save_model(lgbm, model_name="lgbm.model")
 
 # 載入模型
-rf_model = load_model()
+rf_model = load_model(model_name="lgbm.model")
 
 # 印出模型效能數據
 show_performances(rf_model, X_test_norm, y_test, target_names=target_names)

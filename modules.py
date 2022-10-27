@@ -6,7 +6,7 @@ import pandas as pd
 from loguru import logger
 from matplotlib import pyplot as plt
 from sklearn.cluster import AffinityPropagation, KMeans
-import plotly.graph_objects as go
+import plotly_.graph_objects as go
 
 
 def process_json_files():
