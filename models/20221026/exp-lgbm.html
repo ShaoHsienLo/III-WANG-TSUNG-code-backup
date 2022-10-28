@@ -37089,25 +37089,25 @@
 /***/ })
 /******/ ]);
 //# sourceMappingURL=bundle.js.map </script></head><body>
-        <div class="lime top_div" id="top_divVG5UT0WLS9TNKFU"></div>
+        <div class="lime top_div" id="top_divB7EFAA8YP1X6316"></div>
         
         <script>
-        var top_div = d3.select('#top_divVG5UT0WLS9TNKFU').classed('lime top_div', true);
+        var top_div = d3.select('#top_divB7EFAA8YP1X6316').classed('lime top_div', true);
         
             var pp_div = top_div.append('div')
                                 .classed('lime predict_proba', true);
             var pp_svg = pp_div.append('svg').style('width', '100%');
-            var pp = new lime.PredictProba(pp_svg, ["A", "B"], [0.00027362587450763254, 0.9997263741254924]);
+            var pp = new lime.PredictProba(pp_svg, ["A", "B"], [0.01827518052993604, 0.981724819470064]);
             
         
         var exp_div;
             var exp = new lime.Explanation(["A", "B"]);
         
                 exp_div = top_div.append('div').classed('lime explanation', true);
-                exp.show([["oil_pressure_kurt <= 0.24", 4.848400193386153e-05], ["5.26 < ingot_kurt <= 35.82", -5.771225599922555e-06], ["-2.24 < bucket_skew <= -1.88", -1.8400821523440049e-06], ["2.21 < bucket_kurt <= 3.70", 1.7715958789603058e-06], ["417.65 < oil_pressure_max <= 422.85", -1.2396982470965294e-06], ["ingot_median <= 480.55", -1.0133340901775484e-06], ["564.49 < bucket_median <= 573.16", 9.697681906848133e-07], ["ingot_mean <= 474.94", 9.67633112820482e-07], ["14.89 < bucket_std <= 16.18", 9.118764631722144e-07], ["mould_iqr <= 0.82", 8.904217379763564e-07]], 1, exp_div);
+                exp.show([["ingot_skew > -1.01", -0.008920408826940233], ["oil_pressure_skew > -0.04", 0.0032737197172137706], ["ingot_kurt <= 5.30", 0.0022144773857971476], ["bucket_skew > -1.58", -0.0013253780506106245], ["-0.16 < mould_skew <= 0.09", -0.0013033733359677747], ["ingot_max <= 491.13", -0.000372650314734309], ["ingot_std <= 5.38", -0.0003385575597153411], ["oil_pressure_ptp <= 1.88", 0.0003290258661633148], ["bucket_kurt <= 1.19", 0.0003118930962322884], ["bucket_max <= 564.56", 0.00026319672789798857]], 1, exp_div);
                 
         var raw_div = top_div.append('div');
-            exp.show_raw_tabular([["oil_pressure_kurt", "-0.23", 4.848400193386153e-05], ["ingot_kurt", "7.27", -5.771225599922555e-06], ["bucket_skew", "-2.02", -1.8400821523440049e-06], ["bucket_kurt", "2.51", 1.7715958789603058e-06], ["oil_pressure_max", "419.12", -1.2396982470965294e-06], ["ingot_median", "443.94", -1.0133340901775484e-06], ["bucket_median", "564.53", 9.697681906848133e-07], ["ingot_mean", "444.29", 9.67633112820482e-07], ["bucket_std", "16.12", 9.118764631722144e-07], ["mould_iqr", "0.77", 8.904217379763564e-07]], 1, raw_div);
+            exp.show_raw_tabular([["ingot_skew", "0.94", -0.008920408826940233], ["oil_pressure_skew", "1.66", 0.0032737197172137706], ["ingot_kurt", "0.23", 0.0022144773857971476], ["bucket_skew", "-0.31", -0.0013253780506106245], ["mould_skew", "-0.07", -0.0013033733359677747], ["ingot_max", "303.59", -0.000372650314734309], ["ingot_std", "0.47", -0.0003385575597153411], ["oil_pressure_ptp", "0.45", 0.0003290258661633148], ["bucket_kurt", "-1.26", 0.0003118930962322884], ["bucket_max", "543.90", 0.00026319672789798857]], 1, raw_div);
         
         </script>
         </body></html>

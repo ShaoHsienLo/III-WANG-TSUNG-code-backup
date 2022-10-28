@@ -149,7 +149,7 @@ def load_model(model_name="rf.model"):
 # 讀檔
 df_1_2 = read_file(r"C:\Users\samuello\Downloads\III\旺欉\code\labeled-data\1st-2st-labeling", "all-labeled-data.csv")
 # df_3 = read_file(r"C:\Users\samuello\Downloads\III\旺欉\code\labeled-data\3st-labeling", "all-labeled-data.csv")
-df_3 = read_file(r"C:\Users\samuello\Downloads\III\旺欉\code\labeled-data\3st-labeling", "no-Oct-5-labeled-data.csv")
+df_3 = read_file(r"C:\Users\samuello\Downloads\III\旺欉\code\labeled-data\3st-labeling", "all-labeled-data.csv")
 df = pd.concat([df_1_2, df_3])
 
 # df_sample = read_file(r"C:\Users\samuello\Downloads\III\旺欉\code\labeled-data", "gaussiancopula-sample-data.csv")
